@@ -25,7 +25,7 @@ function getData(worker) {
   var totaldata = {};
   var count = 0;
   totaldata.http = {};
-  totaldata.http = { host: [], port: [], spdy: [], ssl: [], active: [], idle: []};//socketConnLog.getHttpConnections(dummy);
+  totaldata.http = { host: [], port: [], spdy: [], ssl: [], active: [], idle: []};
   totaldata.websocket = {hostport: [], encrypted: [], msgsent: [], msgreceived: [], sentsize: [], receivedsize: []};
   totaldata.socket = {host: [], port: [], tcp: [], active: [], idle: [], socksent: [], sockreceived: [], sent: [], received: []};
   totaldata.dns = {hostname: [], family: [], hostaddr: [], expiration: []};
@@ -40,29 +40,29 @@ function getData(worker) {
 	  socketConnLog.getSocketsReq(onSocketData);
 	  socketConnLog.getDNSCacheEntriesReq(onDnsData);
 	  
-    function onHttpData(bla) {
-      totaldata.http = socketConnLog.getHttpConnections(dummy);
+    function onHttpData(data) {
+      totaldata.http = data;
       count++;
       if (count==4)
         resetTimer();
     }
 
-    function onWebSocketData(bla) {
-      totaldata.websocket = socketConnLog.getWebSocketConnections(dummy);
+    function onWebSocketData(data) {
+      totaldata.websocket = data;
       count++;
       if (count==4)
         resetTimer();
     }
 
-    function onSocketData(bla) {
-      totaldata.socket = socketConnLog.getSockets(dummy);
+    function onSocketData(data) {
+      totaldata.socket = data;
       count++;
       if (count==4)
         resetTimer();
     }
 
-    function onDnsData(bla) {
-      totaldata.dns = socketConnLog.getDNSCacheEntries(dummy);
+    function onDnsData(data) {
+      totaldata.dns = data;
       count++;
       if (count==4)
         resetTimer();
