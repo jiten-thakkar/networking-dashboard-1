@@ -11,36 +11,70 @@ Cm.QueryInterface(Ci.nsIComponentRegistrar);
 var self = require("self");
 var timers = require("timers");
 
-function getData(worker) {
-        var httpConnlog = Cc['@mozilla.org/network/http-connectionlog;1'].
-		      getService(Components.interfaces.nsIHttpConnectionLog); 
-  
-	var websocketConnLog = Cc['@mozilla.org/network/websocket-connectionlog;1'].
-			getService(Components.interfaces.nsIWebSocketConnectionLog);
+function dummy(mystr) {
+  console.log(mystr);
+}
 
+function getData(worker) {
+	
 	var socketConnLog = Cc['@mozilla.org/network/dashboard;1'].
 			getService(Components.interfaces.nsIDashboard);
 
-	var dnsdata = Cc['@mozilla.org/netwerk/dns-cache-entries;1'].
-			getService(Components.interfaces.nsIDNSCacheEntries);
+	socketConnLog.startLogging = true;
 
-	websocketConnLog.startLogging = true;
+  var totaldata = {};
+  var count = 0;
+  totaldata.http = {};
+  totaldata.http = { host: [], port: [], spdy: [], ssl: [], active: [], idle: []};//socketConnLog.getHttpConnections(dummy);
+  totaldata.websocket = {hostport: [], encrypted: [], msgsent: [], msgreceived: [], sentsize: [], receivedsize: []};
+  totaldata.socket = {host: [], port: [], tcp: [], active: [], idle: [], socksent: [], sockreceived: [], sent: [], received: []};
+  totaldata.dns = {hostname: [], family: [], hostaddr: [], expiration: []};
+  worker.port.emit('networking',totaldata);
+
 	get();
 
 	function get() {
-	  var data = httpConnlog.getConnections();
-	  var data1 = websocketConnLog.getConnections();
-	  var data2 = socketConnLog.getSockets();
-	  var data3 = dnsdata.getDNSCacheEntries();
-	  var totaldata = {};
-	  totaldata.http = data;
-	  totaldata.websocket = data1;
-	  totaldata.socket = data2;
-	  totaldata.dns = data3;
-	  worker.port.emit('networking',totaldata);  
-	  var t=timers.setTimeout(get,5000);
+    totaldata = {}
+	  socketConnLog.getHttpConnectionsReq(onHttpData);
+	  socketConnLog.getWebSocketConnectionsReq(onWebSocketData);
+	  socketConnLog.getSocketsReq(onSocketData);
+	  socketConnLog.getDNSCacheEntriesReq(onDnsData);
+	  
+    function onHttpData(bla) {
+      totaldata.http = socketConnLog.getHttpConnections(dummy);
+      count++;
+      if (count==4)
+        resetTimer();
+    }
+
+    function onWebSocketData(bla) {
+      totaldata.websocket = socketConnLog.getWebSocketConnections(dummy);
+      count++;
+      if (count==4)
+        resetTimer();
+    }
+
+    function onSocketData(bla) {
+      totaldata.socket = socketConnLog.getSockets(dummy);
+      count++;
+      if (count==4)
+        resetTimer();
+    }
+
+    function onDnsData(bla) {
+      totaldata.dns = socketConnLog.getDNSCacheEntries(dummy);
+      count++;
+      if (count==4)
+        resetTimer();
+    }
+
+    function resetTimer() {
+      count = 0;
+      worker.port.emit('networking',totaldata);  
+      var t=timers.setTimeout(get,5000);
+    }    
 	}
-    } 
+}
     
 var pagemod = require("page-mod").PageMod({
     include: ['about:networking'],
