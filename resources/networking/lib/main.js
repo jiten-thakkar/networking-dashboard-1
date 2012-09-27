@@ -16,11 +16,11 @@ function dummy(mystr) {
 }
 
 function getData(worker) {
-	
-	var socketConnLog = Cc['@mozilla.org/network/dashboard;1'].
-			getService(Components.interfaces.nsIDashboard);
+  
+  var dash = Cc['@mozilla.org/network/dashboard;1'].
+      getService(Components.interfaces.nsIDashboard);
 
-	socketConnLog.startLogging = true;
+  dash.startLogging = true;
 
   var totaldata = {};
   var count = 0;
@@ -31,41 +31,67 @@ function getData(worker) {
   totaldata.dns = {hostname: [], family: [], hostaddr: [], expiration: []};
   worker.port.emit('networking',totaldata);
 
-	get();
+  get();
 
-	function get() {
-    totaldata = {}
-	  socketConnLog.getHttpConnectionsReq(onHttpData);
-	  socketConnLog.getWebSocketConnectionsReq(onWebSocketData);
-	  socketConnLog.getSocketsReq(onSocketData);
-	  socketConnLog.getDNSCacheEntriesReq(onDnsData);
-	  
-    function onHttpData(data) {
-      totaldata.http = data;
-      count++;
-      if (count==4)
-        resetTimer();
+  function get() {
+    //totaldata = {}
+    dash.getSocketsReq();
+    dash.getHttpConnectionsReq();
+    dash.getWebSocketConnectionsReq();
+    dash.getDNSCacheEntriesReq();
+
+    getSocketData();
+    getHttpData();
+    getWebSocketData();
+    getDnsData();
+
+    function getSocketData() {
+      if (dash.socketDataAvailable) {
+        totaldata.socket = dash.getSockets();
+        count++;
+        if (count==4)
+          resetTimer();
+      } else {
+        console.log("sock reschedule");
+        var t1 = timers.setTimeout(getSocketData,100);
+      } 
     }
 
-    function onWebSocketData(data) {
-      totaldata.websocket = data;
-      count++;
-      if (count==4)
-        resetTimer();
+    function getHttpData() {
+      if (dash.httpDataAvailable) {
+        totaldata.http = dash.getHttpConnections();
+        count++;
+        if (count==4)
+          resetTimer();  
+      } else {
+        console.log("http reschedule");
+        var t2 = timers.setTimeout(getHttpData,100);
+      }
     }
 
-    function onSocketData(data) {
-      totaldata.socket = data;
-      count++;
-      if (count==4)
-        resetTimer();
+    function getWebSocketData() {
+      if (dash.webSocketDataAvailable) {
+        totaldata.websocket = dash.getWebSocketConnections();
+        count++;
+        if (count==4)
+          resetTimer();  
+      } else {
+        console.log("webs reschedule");
+        var t3 = timers.setTimeout(getWebSocketData,100);
+      }
+      
     }
 
-    function onDnsData(data) {
-      totaldata.dns = data;
-      count++;
-      if (count==4)
-        resetTimer();
+    function getDnsData() {
+      if (dash.dnsDataAvailable) {
+        totaldata.dns = dash.getDNSCacheEntries();
+        count++;
+        if (count==4)
+          resetTimer();
+      } else {
+        console.log("dns reschedule");
+        var t4 = timers.setTimeout(getDnsData,100);
+      }
     }
 
     function resetTimer() {
@@ -73,7 +99,7 @@ function getData(worker) {
       worker.port.emit('networking',totaldata);  
       var t=timers.setTimeout(get,5000);
     }    
-	}
+  }
 }
     
 var pagemod = require("page-mod").PageMod({
