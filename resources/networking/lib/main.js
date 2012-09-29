@@ -35,63 +35,38 @@ function getData(worker) {
 
   function get() {
     //totaldata = {}
-    dash.getSocketsReq();
-    dash.getHttpConnectionsReq();
-    dash.getWebSocketConnectionsReq();
-    dash.getDNSCacheEntriesReq();
+    dash.getSocketsReq(getSocketData);
+    dash.getHttpConnectionsReq(getHttpData);
+    dash.getWebSocketConnectionsReq(getWebSocketData);
+    dash.getDNSCacheEntriesReq(getDnsData);
 
-    getSocketData();
-    getHttpData();
-    getWebSocketData();
-    getDnsData();
-
-    function getSocketData() {
-      if (dash.socketDataAvailable) {
-        totaldata.socket = dash.getSockets();
-        count++;
-        if (count==4)
-          resetTimer();
-      } else {
-        console.log("sock reschedule");
-        var t1 = timers.setTimeout(getSocketData,100);
-      } 
+    function getSocketData(data) {
+      totaldata.socket = data;
+      count++;
+      if (count==4)
+        resetTimer();
     }
 
-    function getHttpData() {
-      if (dash.httpDataAvailable) {
-        totaldata.http = dash.getHttpConnections();
-        count++;
-        if (count==4)
-          resetTimer();  
-      } else {
-        console.log("http reschedule");
-        var t2 = timers.setTimeout(getHttpData,100);
-      }
+    function getHttpData(data) {
+      totaldata.http = data;
+      count++;
+      if (count==4)
+        resetTimer();
     }
 
-    function getWebSocketData() {
-      if (dash.webSocketDataAvailable) {
-        totaldata.websocket = dash.getWebSocketConnections();
-        count++;
-        if (count==4)
-          resetTimer();  
-      } else {
-        console.log("webs reschedule");
-        var t3 = timers.setTimeout(getWebSocketData,100);
-      }
+    function getWebSocketData(data) {
+      totaldata.websocket = data;
+      count++;
+      if (count==4)
+        resetTimer();
       
     }
 
-    function getDnsData() {
-      if (dash.dnsDataAvailable) {
-        totaldata.dns = dash.getDNSCacheEntries();
-        count++;
-        if (count==4)
-          resetTimer();
-      } else {
-        console.log("dns reschedule");
-        var t4 = timers.setTimeout(getDnsData,100);
-      }
+    function getDnsData(data) {
+      totaldata.dns = data;
+      count++;
+      if (count==4)
+        resetTimer();
     }
 
     function resetTimer() {
