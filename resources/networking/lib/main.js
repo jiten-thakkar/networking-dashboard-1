@@ -20,14 +20,14 @@ function getData(worker) {
   var dash = Cc['@mozilla.org/network/dashboard;1'].
       getService(Components.interfaces.nsIDashboard);
 
-  dash.startLogging = true;
+  dash.enableLogging = true;
 
   var totaldata = {};
   var count = 0;
   totaldata.http = {};
-  totaldata.http = { host: [], port: [], spdy: [], ssl: [], active: [], idle: []};
-  totaldata.websocket = {hostport: [], encrypted: [], msgsent: [], msgreceived: [], sentsize: [], receivedsize: []};
-  totaldata.socket = {host: [], port: [], tcp: [], active: [], idle: [], socksent: [], sockreceived: [], sent: [], received: []};
+  totaldata.http = { host: [], port: [], spdy: [], ssl: [], active: [], idle: [] };
+  totaldata.websocket = {hostport: [], encrypted: [], msgsent: [], msgreceived: [], sentsize: [], receivedsize: [] };
+  totaldata.socket = {host: [], port: [], tcp: [], active: [], idle: [], socksent: [], sockreceived: [], sent: [], received: [] };
   totaldata.dns = {hostname: [], family: [], hostaddr: [], expiration: []};
   worker.port.emit('networking',totaldata);
 
@@ -35,10 +35,10 @@ function getData(worker) {
 
   function get() {
     //totaldata = {}
-    dash.getSocketsReq(getSocketData);
-    dash.getHttpConnectionsReq(getHttpData);
-    dash.getWebSocketConnectionsReq(getWebSocketData);
-    dash.getDNSCacheEntriesReq(getDnsData);
+    dash.requestSockets(getSocketData);
+    dash.requestHttpConnections(getHttpData);
+    dash.requestWebsocketConnections(getWebSocketData);
+    dash.requestDNSInfo(getDnsData);
 
     function getSocketData(data) {
       totaldata.socket = data;
