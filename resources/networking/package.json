@@ -1,9 +1,9 @@
 {
     "name": "networking", 
     "license": "MPL 2.0", 
-    "author": "Jiten Thakkar", 
+    "author": "Jiten Thakkar | Valentin Gosu", 
     "version": "0.1", 
     "fullName": "about:networking", 
-    "id": "jid1-SsyJKBEwVM7h4Q", 
-    "description": "a basic add-on"
+    "id": "networking@dashboard", 
+    "description": "A front end for the Networking Dashboard"
 }

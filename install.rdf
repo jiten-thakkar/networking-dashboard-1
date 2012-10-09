@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. --><RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>jid1-SsyJKBEwVM7h4Q@jetpack</em:id>
+    <em:id>networking@dashboard</em:id>
     <em:version>0.1</em:version>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
@@ -18,11 +18,10 @@
     </em:targetApplication>
 
     <!-- Front End MetaData -->
-    <em:name>about:networkign-dashboard</em:name>
-    <em:description>a basic add-on</em:description>
+    <em:name>about:networking</em:name>
+    <em:description>A front end for the Networking Dashboard</em:description>
     <em:creator>Jiten Thakkar</em:creator>
-    
-    
+    <em:contributor>Valentin Gosu</em:contributor>
     
   </Description>
 </RDF>

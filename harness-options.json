@@ -1,7 +1,7 @@
 {
  "allTestModules": [], 
  "enable_e10s": false, 
- "jetpackID": "jid1-SsyJKBEwVM7h4Q@jetpack", 
+ "jetpackID": "networking@dashboard", 
  "loader": "api-utils/lib/cuddlefish.js", 
  "main": "main", 
  "mainPath": "networking/lib/main.js", 
@@ -1117,8 +1117,8 @@
    "name": "api-utils"
   }, 
   "networking": {
-   "author": "Jiten Thakkar", 
-   "description": "a basic add-on", 
+   "author": "Jiten Thakkar | Valentin Gosu", 
+   "description": "a front end for the Networking Dashboard", 
    "license": "MPL 2.0", 
    "main": "main", 
    "name": "networking", 
