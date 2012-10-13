@@ -82,7 +82,7 @@ var pagemod = require("page-mod").PageMod({
     onAttach: function(worker) {
               getData(worker);
               worker.port.on('loggingPref', function(pref){
-	        dash.enableLogging = pref;
+                dash.enableLogging = pref;
               });
     }
 });
@@ -98,7 +98,7 @@ let netDash = Unknown.extend({
     var html = 'data:text/html,<!DOCTYPE html><html><head><meta charset="UTF-8" />'
                +'<LINK href="'+self.data.url("stylesheet.css")+'" rel="stylesheet" type="text/css">'
                +'</head><body>'
-               +'<div id="but"></div>'
+               +'<div id="buttonDiv"></div>'
                +'<ul id="tabul">'
                +'</ul><div id="tabcontent" class="ui-content"></div>';
     html += "</body></html>";
