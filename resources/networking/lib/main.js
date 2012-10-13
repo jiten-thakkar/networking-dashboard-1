@@ -10,17 +10,15 @@ Cm.QueryInterface(Ci.nsIComponentRegistrar);
 
 var self = require("self");
 var timers = require("timers");
+var dash = Cc['@mozilla.org/network/dashboard;1'].
+    getService(Components.interfaces.nsIDashboard);
 
 function dummy(mystr) {
   console.log(mystr);
 }
 
 function getData(worker) {
-  
-  var dash = Cc['@mozilla.org/network/dashboard;1'].
-      getService(Components.interfaces.nsIDashboard);
-
-  dash.enableLogging = true;
+  dash.enableLogging = false;
 
   var totaldata = {};
   var count = 0;
@@ -83,6 +81,9 @@ var pagemod = require("page-mod").PageMod({
                         self.data.url("jquery.flot.min.js")],
     onAttach: function(worker) {
               getData(worker);
+              worker.port.on('loggingPref', function(pref){
+	        dash.enableLogging = pref;
+              });
     }
 });
 
@@ -97,6 +98,7 @@ let netDash = Unknown.extend({
     var html = 'data:text/html,<!DOCTYPE html><html><head><meta charset="UTF-8" />'
                +'<LINK href="'+self.data.url("stylesheet.css")+'" rel="stylesheet" type="text/css">'
                +'</head><body>'
+               +'<div id="but"></div>'
                +'<ul id="tabul">'
                +'</ul><div id="tabcontent" class="ui-content"></div>';
     html += "</body></html>";

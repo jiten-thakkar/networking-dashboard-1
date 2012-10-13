@@ -189,6 +189,13 @@ function updateContent() {
 }
 
 $(function() {
+    $("#but").append('<div><button type="button" id="loggingButton">Start Logging</button></div>');
+    $("#loggingButton").bind('click', function(){
+      if($("#loggingButton").html() == "Start Logging")
+        setLoggingPref(true);
+      else
+        setLoggingPref(false);
+    });
     createtabs(tabs);
     
     function createtabs(tabnames) {
@@ -219,3 +226,11 @@ self.port.on("networking", function(data) {
   timeLineData.received.push(data.socket.received);
   updateContent();
 });
+
+function setLoggingPref(pref) {
+  if(pref == true)
+    $("#loggingButton").html('Stop Logging');
+  else
+    $("#loggingButton").html('Start Logging');
+  self.port.emit('loggingPref', pref);
+}
