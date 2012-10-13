@@ -189,7 +189,7 @@ function updateContent() {
 }
 
 $(function() {
-    $("#but").append('<div><button type="button" id="loggingButton">Start Logging</button></div>');
+    $("#buttonDiv").append('<div><button type="button" id="loggingButton">Start Logging</button></div>');
     $("#loggingButton").bind('click', function(){
       if($("#loggingButton").html() == "Start Logging")
         setLoggingPref(true);
